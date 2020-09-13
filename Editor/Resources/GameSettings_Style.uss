@@ -1,0 +1,112 @@
+Label 
+{
+    font-size: 40px;
+    -unity-font-style: bold;
+}
+
+#Header 
+{
+	height: 60px;
+	width: auto;
+	-unity-text-align: middle-center;
+	display: flex;                  	
+	flex-direction: row;
+}
+
+#Container 
+{
+	display: flex;
+	flex-direction: row;
+	width: auto;
+	color: rgb(51, 51, 51);
+}
+
+#RightPanel 
+{
+	position: relative;
+	flex: 1;
+	width: auto;
+	border-width: 2px;
+	border-color: rgb(40,40,40);
+}
+
+#LeftPanel 
+{
+	-unity-text-align: middle-center;
+	flex: 1;
+	max-width: 170;
+	border-width: 2px;
+	border-color: rgb(60,60,60);
+	background-color: rgb(60,60,60);
+}
+
+#ListView 
+{
+	height: 5000;
+	flex: 1;
+	flex-direction: row;
+	flex-grow: 1000;
+	margin-top: 15;
+}
+
+#ListContainer 
+{
+	display: flex;
+	flex-direction: row;
+}
+
+.ListButton
+{
+	margin-left: 20px;
+	flex: 0.1;
+}
+
+.ListLabel
+{
+	flex: 1;
+	position: relative;
+	min-height: 27px;
+	-unity-text-align: middle-left;
+	background-color: GrayText;
+	border-color: rgba(0,0,0,0);
+	border-top-color: rgb(70,70,70);	
+	border-bottom-color: rgb(50,50,50);
+}
+
+.ListLabel
+{
+	flex: 1;
+	position: relative;
+	min-height: 27px;
+	-unity-text-align: middle-left;
+	background-color: GrayText;
+	border-color: rgba(0,0,0,0);
+	border-top-color: rgb(70,70,70);	
+	border-bottom-color: rgb(50,50,50);
+}
+
+Button:hover
+{
+	background-color: rgba(70, 70, 70,1);
+}
+
+#RightBottomPanel *
+{
+	padding: 2px;
+}
+
+#RightBottomPanel Label 
+{
+	min-width: 50px;
+}
+
+.ButtonList 
+{
+	flex: 0.30;
+	height: 30px;
+	padding: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+

@@ -1,0 +1,17 @@
+{
+	"name":"com.ishimine.ScriptableSettings",
+	"displayName": "ScriptableSettings",
+	"version": "1.0.0",
+	"Unity": "2019.1",
+	"author": "Felipe Ishimine",
+	"description": "Core package for creating a Settings Management System based on the Flyweight Pattern with ScriptableObjects and a centralized editor window",
+	"dependencies":{  		 
+	},
+	"keywords":
+	["same","state", "machine","Ishimine"],
+	"repository":
+	{
+		"type": "git",
+		"url": "https://github.com/FelipeIshimine/ScriptableSettings.git"
+	}
+}

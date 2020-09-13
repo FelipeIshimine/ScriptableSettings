@@ -1,0 +1,25 @@
+{
+  "name": "com.ishimine.scriptablesettingscore",
+  "displayName": "ScriptableSettings",
+  "description": "Package for creating and Managing many 'Settings' ScriptableObjects applying a 'Flyweight' pattern and a centra ScriptableSettingsManager with a custom Window in ElementUI",
+  "version": "1.0.0",
+  "Unity": "2019.1",
+  "author": {
+    "name": "Felipe ishimine",
+    "email": "FelipeIshimine@gmail.com"
+  },
+  "dependencies": 
+  {
+    "com.unity.modules.uielements": "1.0.0"
+  },
+  "keywords": [
+    "Flyweight",
+    "state",
+    "ishimine",
+    "Ishimine"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FelipeIshimine/ScriptableSettings.git"
+  }
+}
