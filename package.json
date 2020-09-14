@@ -2,7 +2,7 @@
   "name": "com.ishimine.scriptablesettingscore",
   "displayName": "ScriptableSettings",
   "description": "Package for creating and Managing many 'Settings' ScriptableObjects applying a 'Flyweight' pattern and a centra ScriptableSettingsManager with a custom Window in ElementUI",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "Unity": "2019.1",
   "author": {
     "name": "Felipe ishimine",
