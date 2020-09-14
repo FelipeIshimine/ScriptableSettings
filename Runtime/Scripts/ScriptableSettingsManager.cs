@@ -20,7 +20,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
 #if UNITY_EDITOR
     public static class UpdateGit
     {
-        [MenuItem("Window/Ishimine/UpdateScriptableSettings", priority = -1)]
+        [MenuItem("Window/Ishimine/UpdateScriptableSettings")]
         public static void SelectMe()
         {
             AddRequest request = Client.Add("https://github.com/FelipeIshimine/ScriptableSettings.git");

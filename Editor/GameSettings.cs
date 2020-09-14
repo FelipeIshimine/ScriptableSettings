@@ -10,7 +10,7 @@ public class GameSettings : EditorWindow
     private Object _selection;
     private string _filterValue = string.Empty;
 
-    [MenuItem("Window/Ishimine/ScriptableSettings")]
+    [MenuItem("Window/Ishimine/ScriptableSettings", priority = 1)]
     public static void ShowExample()
     {
         GameSettings wnd = GetWindow<GameSettings>();
