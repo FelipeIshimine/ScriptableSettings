@@ -6,9 +6,28 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor.PackageManager;
+using UnityEditor.PackageManager.Requests;
+
+
+
+#endif
+
 [CreateAssetMenu(menuName = "GameSettings/Manager", fileName = "GameSettingsManager")]
 public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsManager>
 {
+#if UNITY_EDITOR
+    public static class UpdateGit
+    {
+        [MenuItem("Window/Ishimine/UpdateScriptableSettings", priority = -1)]
+        public static void SelectMe()
+        {
+            AddRequest request = Client.Add("https://github.com/FelipeIshimine/ScriptableSettings.git");
+        }
+    }
+#endif
+
     public override ScriptableSettingsManager Myself => this;
 
     private readonly List<ScriptableSettings> _scriptableSettings = new List<ScriptableSettings>();
