@@ -73,14 +73,7 @@ public abstract class ScriptableSingleton<T> : BaseScriptableSingleton where T :
                 Debug.LogError("<Color=red> " + this + "  SCRIPTABLE_SINGLETON ALREADY EXIST CONFLICT </color>");
         }
     }
-     protected virtual void OnDisable()
-    {
-
-    }
-     protected virtual void OnEnable()
-    {
-
-    }
+   
 }
 
 public abstract class BaseScriptableSingleton : ScriptableObject

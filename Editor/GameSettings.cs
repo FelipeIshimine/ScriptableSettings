@@ -73,17 +73,18 @@ public class GameSettings : EditorWindow
             ScriptableSettings value = gsm.ScriptableSettings[i];
 
             if (_selection == value)
+            {
                 button.style.backgroundColor = new StyleColor(new Color(0.25f, 0.35f, 0.6f, 1f));
-
-            button.clicked += () => UpdateSelection(rootVisualElement, value);
+                UnityEditor.Editor editor = UnityEditor.Editor.CreateEditor(value);
+                rootVisualElement.Q<IMGUIContainer>("Target").onGUIHandler = () => editor.OnInspectorGUI();
+            }
+            button.clicked += () => UpdateSelection(value);
         }
     }
 
-    private void UpdateSelection(VisualElement root, Object target)
+    private void UpdateSelection(Object target)
     {
         _selection = target;
-        UnityEditor.Editor editor = UnityEditor.Editor.CreateEditor(target);
-        root.Q<IMGUIContainer>("Target").onGUIHandler = () => editor.OnInspectorGUI();
         PopulatePresetList();
     }
 }
