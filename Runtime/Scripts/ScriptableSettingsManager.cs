@@ -9,9 +9,6 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
-
-
-
 #endif
 
 [CreateAssetMenu(menuName = "GameSettings/Manager", fileName = "GameSettingsManager")]
@@ -30,20 +27,19 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
 
     public override ScriptableSettingsManager Myself => this;
 
-    private readonly List<ScriptableSettings> _scriptableSettings = new List<ScriptableSettings>();
+    [SerializeField] private  List<ScriptableSettings> scriptableSettings = new List<ScriptableSettings>();
 
     public List<ScriptableSettings> ScriptableSettings
     {
         get
         {
-            if (_scriptableSettings == null)
+            if (scriptableSettings == null)
                 InitializeAllSettings();
-            return _scriptableSettings;
+            return scriptableSettings;
         }
     }
 
     private Dictionary<string, ScriptableSettings> _allSettings;
-
     public Dictionary<string, ScriptableSettings> AllSettings
     {
         get
@@ -57,17 +53,22 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
     private void InitializeAllSettings()
     {
         _allSettings = new Dictionary<string, ScriptableSettings>();
-        foreach (ScriptableSettings item in _scriptableSettings)
+        foreach (ScriptableSettings item in scriptableSettings)
             _allSettings.Add(GetKey(item.GetType()), item);
     }
 
-    private static string GetKey(Type type) => type.FullName?.Replace("+Settings", string.Empty);
+    private static string GetKey(Type type) => type.FullName?.Replace("Settings", string.Empty);
 
     public const string AssetsPath = "Assets/GameSettings/Resources";
 
     public static T Get<T>() where T : ScriptableSettings
     {
-        return Instance.AllSettings[GetKey(typeof(T))] as T;
+        string key = GetKey(typeof(T));
+
+        if (!Instance.AllSettings.ContainsKey(key))
+            Update();
+        
+        return Instance.AllSettings[key] as T;
     }
 
 #if UNITY_EDITOR
@@ -79,7 +80,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
 
     public void _Update()
     {
-        _scriptableSettings.Clear();
+        scriptableSettings.Clear();
 
         IEnumerable<Type> types = GetAllSubclassTypes<ScriptableSettings>();
 
@@ -93,7 +94,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
         {
             string currentPath = $"{AssetsPath}/{GetKey(item)}.asset";
             string localPath = $"{GetKey(item)}";
-            UnityEngine.Object uObject = Resources.Load(localPath, item);
+            UnityEngine.Object uObject = Resources.Load(currentPath, item);
             if (uObject == null)
             {
                 Debug.Log($"Created: {currentPath}");
@@ -101,11 +102,9 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
                 AssetDatabase.CreateAsset(uObject, $"{currentPath}");
                 AssetDatabase.SaveAssets();
             }
-
-            _scriptableSettings.Add(uObject as ScriptableSettings);
+            scriptableSettings.Add(uObject as ScriptableSettings);
         }
     }
-
     private static IEnumerable<Type> GetAllSubclassTypes<T>()
     {
         return from assembly in AppDomain.CurrentDomain.GetAssemblies()
