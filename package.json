@@ -8,8 +8,7 @@
     "name": "Felipe ishimine",
     "email": "FelipeIshimine@gmail.com"
   },
-  "dependencies": 
-  {
+  "dependencies": {
     "com.unity.modules.uielements": "1.0.0"
   },
   "keywords": [
