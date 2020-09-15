@@ -94,7 +94,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
         {
             string currentPath = $"{AssetsPath}/{GetKey(item)}.asset";
             string localPath = $"{GetKey(item)}";
-            UnityEngine.Object uObject = Resources.Load(currentPath, item);
+            UnityEngine.Object uObject = Resources.Load(localPath, item);
             if (uObject == null)
             {
                 Debug.Log($"Created: {currentPath}");
