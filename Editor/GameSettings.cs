@@ -51,9 +51,13 @@ public class GameSettings : EditorWindow
     {
         ListView list = rootVisualElement.Q<ListView>("ListView");
         list.Clear();
-        
-        Button refreshButton  = new Button(){text = "UPDATE"};
-        refreshButton.clicked += ScriptableSettingsManager.Update;
+
+        Button refreshButton = new Button() {text = "UPDATE"};
+        refreshButton.clicked += () =>
+        {
+            ScriptableSettingsManager.Update();
+            Update();
+        };
         list.Add(refreshButton);
 
         ScriptableSettingsManager gsm = ScriptableSettingsManager.Instance;
