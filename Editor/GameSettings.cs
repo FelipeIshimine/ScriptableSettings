@@ -56,7 +56,8 @@ public class GameSettings : EditorWindow
         refreshButton.clicked += () =>
         {
             ScriptableSettingsManager.Update();
-            Update();
+            Close();
+            ShowExample();
         };
         list.Add(refreshButton);
 
