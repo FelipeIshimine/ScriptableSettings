@@ -65,10 +65,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
         Debug.Log("Searching for key: " + key);
         
         if (!Instance.AllSettings.ContainsKey(key))
-        {
-            Update();
             Instance.InitializeAllSettings();
-        }
         
         return Instance.AllSettings[key] as T;
     }
