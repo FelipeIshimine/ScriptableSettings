@@ -64,10 +64,12 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
     public static T Get<T>() where T : ScriptableSettings
     {
         string key = GetKey(typeof(T));
-
+        Debug.Log("Searching for key: " + key);
         if (!Instance.AllSettings.ContainsKey(key))
+        {
             Update();
-        
+            Instance.InitializeAllSettings();
+        }
         return Instance.AllSettings[key] as T;
     }
 
