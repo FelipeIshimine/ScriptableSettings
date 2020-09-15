@@ -61,7 +61,7 @@ public class GameSettings : EditorWindow
             if (!fieldName.Contains(lowerFilterValue)) continue;
 
             VisualElement listContainer = new VisualElement {name = "ListContainer"};
-            Button button = new Button {text = gsm.ScriptableSettings[i].name};
+            Button button = new Button {text = gsm.ScriptableSettings[i].name.Replace("Settings",string.Empty)};
 
             //Applying a CSS class to an element
             button.AddToClassList("ListLabel");

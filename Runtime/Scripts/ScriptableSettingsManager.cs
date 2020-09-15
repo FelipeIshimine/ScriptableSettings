@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 #endif
 using UnityEngine;
-
+using Object = System.Object;
 #if UNITY_EDITOR
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
@@ -39,7 +39,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
         }
     }
 
-    private Dictionary<string, ScriptableSettings> _allSettings;
+    public Dictionary<string, ScriptableSettings> _allSettings;
     public Dictionary<string, ScriptableSettings> AllSettings
     {
         get
@@ -57,24 +57,23 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
             _allSettings.Add(GetKey(item.GetType()), item);
     }
 
-    private static string GetKey(Type type) => type.FullName?.Replace("Settings", string.Empty);
-
-    public const string AssetsPath = "Assets/GameSettings/Resources";
-
+    private static string GetKey(Type type) => type.FullName;
+    public const string AssetsPath = "Assets/ScriptableSettings/Resources";
     public static T Get<T>() where T : ScriptableSettings
     {
         string key = GetKey(typeof(T));
         Debug.Log("Searching for key: " + key);
+        
         if (!Instance.AllSettings.ContainsKey(key))
         {
             Update();
             Instance.InitializeAllSettings();
         }
+        
         return Instance.AllSettings[key] as T;
     }
 
 #if UNITY_EDITOR
-    [InitializeOnLoadMethod]
     public static void Update()
     {
         Instance._Update();
@@ -86,28 +85,30 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
 
         IEnumerable<Type> types = GetAllSubclassTypes<ScriptableSettings>();
 
-        if (!AssetDatabase.IsValidFolder("Assets/GameSettings"))
-            AssetDatabase.CreateFolder("Assets", "GameSettings");
+        if (!AssetDatabase.IsValidFolder("Assets/ScriptableSettings"))
+            AssetDatabase.CreateFolder("Assets", "ScriptableSettings");
 
-        if (!AssetDatabase.IsValidFolder("Assets/GameSettings/Resources"))
-            AssetDatabase.CreateFolder("Assets/GameSettings", "Resources");
+        if (!AssetDatabase.IsValidFolder("Assets/ScriptableSettings/Resources"))
+            AssetDatabase.CreateFolder("Assets/ScriptableSettings", "Resources");
 
         foreach (Type item in types)
         {
-            string currentPath = $"{AssetsPath}/{GetKey(item)}.asset";
-            string localPath = $"{GetKey(item)}";
+            string key = GetKey(item);
+            string currentPath = $"{AssetsPath}/{key}.asset";
+            string localPath = $"{key}";
             UnityEngine.Object uObject = Resources.Load(localPath, item);
             if (uObject == null)
             {
                 Debug.Log($"Created: {currentPath}");
                 uObject = CreateInstance(item);
                 AssetDatabase.CreateAsset(uObject, $"{currentPath}");
-                AssetDatabase.SaveAssets();
             }
             scriptableSettings.Add(uObject as ScriptableSettings);
         }
+        AssetDatabase.SaveAssets();
     }
-    private static IEnumerable<Type> GetAllSubclassTypes<T>()
+    
+    private static IEnumerable<Type> GetAllSubclassTypes<T>() 
     {
         return from assembly in AppDomain.CurrentDomain.GetAssemblies()
             from type in assembly.GetTypes()
