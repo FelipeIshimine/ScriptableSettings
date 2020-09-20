@@ -1,36 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:engine="UnityEngine.UIElements"
-      xmlns:editor="UnityEditor.UIElements"
-
-  xsi:noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd"
-  xsi:schemaLocation="
-                          UnityEngine.UIElements ../../../UIElementsSchema/UnityEngine.UIElements.xsd
-                          UnityEditor.UIElements ../../../UIElementsSchema/UnityEditor.UIElements.xsd
-                          UnityEditor.PackageManager.UI ../../../UIElementsSchema/UnityEditor.PackageManager.UI.xsd
-  "
->
-<engine:VisualElement name="ButtonHolder">
-    
-  </engine:VisualElement>
- 
-  <engine:VisualElement name="Container">
-   
-    
-    <engine:VisualElement name="LeftPanel">
-        <engine:TextField name="SearchField">
-        </engine:TextField>
-        
-      <engine:ListView name="ListView"/>
-    
-    </engine:VisualElement>
-
-    <engine:VisualElement name="RightPanel">
-      <engine:ScrollView>
-            <engine:IMGUIContainer name="Target">
-          </engine:IMGUIContainer>
-      </engine:ScrollView>
-    </engine:VisualElement>
-  </engine:VisualElement>
-</engine:UXML>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Body">
+        <Style src="GameSettings_Style.uss" />
+        <ui:VisualElement name="Container">
+            <ui:VisualElement name="LeftPanel">
+                <uie:ToolbarSearchField name="SearchField" class="GameSettings_Style" style="width: auto;" />
+                <ui:Button name="Update" text="Update" />
+                <ui:ListView name="ListView" />
+            </ui:VisualElement>
+            <ui:VisualElement name="RightPanel">
+                <ui:ScrollView>
+                    <ui:IMGUIContainer name="Target" />
+                </ui:ScrollView>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+
 #if UNITY_EDITOR
 using UnityEditor;
-#endif
-using UnityEngine;
-using Object = System.Object;
-#if UNITY_EDITOR
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 #endif
+
 
 [CreateAssetMenu(menuName = "GameSettings/Manager", fileName = "GameSettingsManager")]
 public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsManager>
@@ -47,7 +46,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
             if (_allSettings == null)
                 InitializeAllSettings();
             return _allSettings;
-        }
+        }    
     }
 
     private void InitializeAllSettings()
@@ -96,13 +95,13 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
             UnityEngine.Object uObject = Resources.Load(localPath, item);
             if (uObject == null)
             {
-                Debug.Log($"Created: {currentPath}");
                 uObject = CreateInstance(item);
                 AssetDatabase.CreateAsset(uObject, $"{currentPath}");
             }
             scriptableSettings.Add(uObject as ScriptableSettings);
         }
         AssetDatabase.SaveAssets();
+        Instance.InitializeAllSettings();
     }
     
     private static IEnumerable<Type> GetAllSubclassTypes<T>() 
