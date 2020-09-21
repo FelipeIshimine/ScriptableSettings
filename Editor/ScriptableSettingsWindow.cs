@@ -5,7 +5,6 @@ using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 using Object = UnityEngine.Object;
 
-
 public class ScriptableSettingsWindow : EditorWindow    
 {
     private Object _selection;
@@ -13,7 +12,7 @@ public class ScriptableSettingsWindow : EditorWindow
 
     private const int leftPanelMaxWidth = 170;
 
-    [MenuItem("Window/Ishimine/ScriptableSettings", priority = 1)]
+    [MenuItem("Window/Ishimine/ScriptableSettings %&i", priority = 1)]
     public static void ShowExample()
     {
         ScriptableSettingsWindow wnd = GetWindow<ScriptableSettingsWindow>();
@@ -37,11 +36,6 @@ public class ScriptableSettingsWindow : EditorWindow
          _toolbarSearchField.name = "SearchField";
                        
          _toolbarSearchField.AddToClassList("ListSearchField");
-         //_toolbarSearchField.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
-
-        // VisualElement top = root.Q<VisualElement>("Top");
-         //top.Add(_toolbarSearchField);
-         
          rootVisualElement.Q<VisualElement>("LeftPanel").style.maxWidth = leftPanelMaxWidth;
                  
          Button refreshButton = rootVisualElement.Q<Button>("Update");

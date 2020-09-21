@@ -48,10 +48,10 @@ public class ChangeTabNameWindow : EditorWindow
         Button cancelButton = rootVisualElement.Q<Button>("CancelB");
         Button defaultButton = rootVisualElement.Q<Button>("DefaultB");
 
-        //textField.SetValueWithoutNotify(settings.TabName);
         acceptButton.clicked += () => ChangeName(_textField.value);
         cancelButton.clicked += Close;
         defaultButton.clicked += () => _textField.SetValueWithoutNotify(settings.DefaultTabName);
+
     }
 
     private void ChangeName(string newName)
@@ -67,5 +67,13 @@ public class ChangeTabNameWindow : EditorWindow
             if(newName != string.Empty && newName != settings.TabName)
                 EditorUtility.DisplayDialog("Invalid name", $"Cant use '{newName}' as new name, already in use", "OK");
         }
+    }
+
+    private void OnGUI()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+            ChangeName(_textField.value);
+        else if (Input.GetKeyDown(KeyCode.Escape))
+            Close();
     }
 }
