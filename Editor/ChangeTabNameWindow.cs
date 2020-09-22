@@ -60,6 +60,8 @@ public class ChangeTabNameWindow : EditorWindow
         {
             settings.TabName = newName;
             _onDone.Invoke();
+            EditorUtility.SetDirty(settings);
+            AssetDatabase.SaveAssets();
             Close();
         }
         else
