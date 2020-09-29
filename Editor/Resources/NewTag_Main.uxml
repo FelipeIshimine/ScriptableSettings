@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Body">
+        <Style src="GameSettings_Style.uss" />
+        <ui:VisualElement style="flex-direction: row; align-items: auto; justify-content: center; opacity: 1; position: relative; flex-shrink: 0; flex-grow: 1; flex-basis: auto; padding-top: 16px;">
+            <ui:TextField picking-mode="Ignore" name="TextField" style="padding-right: 20px; padding-left: 20px; padding-top: 0; padding-bottom: 0; -unity-background-scale-mode: stretch-to-fill; align-items: auto; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; flex-grow: 1; flex-shrink: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-direction: row; align-items: auto; justify-content: center; margin-top: 10px; margin-bottom: 10px;">
+            <ui:Button name="Create" text="Create" style="-unity-font-style: bold; padding-left: 6px; padding-right: 6px; padding-top: 1px; padding-bottom: 1px; flex-shrink: 0; flex-grow: 0;" />
+            <ui:Button name="CancelB" text="Cancel" style="flex-shrink: 1; color: rgb(196, 205, 196);" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

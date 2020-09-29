@@ -26,8 +26,19 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
 
     public override ScriptableSettingsManager Myself => this;
 
-    [SerializeField] private  List<ScriptableSettings> scriptableSettings = new List<ScriptableSettings>();
+    [SerializeField] private  List<ScriptableSettingsTag> tags = new List<ScriptableSettingsTag>();
+    public List<ScriptableSettingsTag> Tags
+    {
+        get
+        {
+            if (tags == null)
+                InitializeTags();
+            return tags;
+        }
+    }
 
+
+    [SerializeField] private  List<ScriptableSettings> scriptableSettings;
     public List<ScriptableSettings> ScriptableSettings
     {
         get
@@ -55,6 +66,11 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
         foreach (ScriptableSettings item in scriptableSettings)
             _allSettings.Add(GetKey(item.GetType()), item);
     }
+    
+    private void InitializeTags()
+    {
+        tags = new List<ScriptableSettingsTag>(Resources.LoadAll<ScriptableSettingsTag>(FilePath));
+    }
 
     private static string GetKey(Type type) => type.FullName;
     public const string AssetsPath = "Assets/ScriptableSettings/Resources";
@@ -70,6 +86,26 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
     }
 
 #if UNITY_EDITOR
+    public static ScriptableSettingsTag CreateNewTag(string nTagName)
+    {
+        return Instance.FindOrCreateTag(nTagName);
+    }
+
+    public ScriptableSettingsTag FindOrCreateTag(string tagName)
+    {
+        ScriptableSettingsTag tag = tags.Find(x => x.name == tagName);
+        return (tag == null)?CreateTag(tagName): tag;
+    }
+
+    private ScriptableSettingsTag CreateTag(string tagName)
+    {
+        ScriptableSettingsTag nTag = CreateInstance<ScriptableSettingsTag>();
+        nTag.name = tagName;
+        AssetDatabase.AddObjectToAsset(nTag, this);
+        tags.Add(nTag);
+        return nTag;
+    }
+
     public static void Update()
     {
         Instance._Update();
@@ -77,6 +113,8 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
 
     public void _Update()
     {
+        if(scriptableSettings == null)
+            scriptableSettings = new List<ScriptableSettings>();
         scriptableSettings.Clear();
 
         IEnumerable<Type> types = GetAllSubclassTypes<ScriptableSettings>();
@@ -102,8 +140,12 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
         }
         AssetDatabase.SaveAssets();
         Instance.InitializeAllSettings();
+        
+        scriptableSettings.Sort(SortByName);
     }
-    
+
+    private int SortByName(ScriptableSettings x, ScriptableSettings y)=> string.Compare(x.name, y.name, StringComparison.Ordinal);
+
     private static IEnumerable<Type> GetAllSubclassTypes<T>() 
     {
         return from assembly in AppDomain.CurrentDomain.GetAssemblies()
@@ -111,5 +153,14 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
             where (type.IsSubclassOf(typeof(T)) && !type.IsAbstract)
             select type;
     }
+    
+    public static void DeleteTag(ScriptableSettingsTag tag)
+    {
+        Instance.tags.Remove(tag);
+        DestroyImmediate(tag,true);
+        AssetDatabase.SaveAssets();    
+    }
 #endif
+
+  
 }

@@ -51,7 +51,6 @@ public class ChangeTabNameWindow : EditorWindow
         acceptButton.clicked += () => ChangeName(_textField.value);
         cancelButton.clicked += Close;
         defaultButton.clicked += () => _textField.SetValueWithoutNotify(settings.DefaultTabName);
-
     }
 
     private void ChangeName(string newName)
