@@ -156,9 +156,13 @@ public class ScriptableSettingsWindow : EditorWindow
 
     private void DeleteTag(ScriptableSettingsTag tag)
     {
-        ScriptableSettingsManager.DeleteTag(tag);
-        PopulateTags(true);
-        PopulatePresetList();
+        if (EditorUtility.DisplayDialog($"Delete tag {tag.name}",
+            $"Are you sure you want to delete the tag {tag.name}?", "Yes", "Cancel"))
+        {
+            ScriptableSettingsManager.DeleteTag(tag);
+            PopulateTags(true);
+            PopulatePresetList();
+        }
     }
 
     private void OnSettingsTagToggle(ScriptableSettings scriptableSettings, ScriptableSettingsTag tag,
