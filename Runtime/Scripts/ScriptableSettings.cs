@@ -16,5 +16,4 @@ public abstract class ScriptableSettings : ScriptableObject
         }        
 
         public string DefaultTabName => GetType().Name.Replace("Settings", string.Empty);
-
 }

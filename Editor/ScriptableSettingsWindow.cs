@@ -25,6 +25,8 @@ public class ScriptableSettingsWindow : EditorWindow
 
     public void OnEnable()
     {
+        ScriptableSettingsManager.Update();
+        
         VisualElement root = rootVisualElement;
 
         var visualTree = Resources.Load<VisualTreeAsset>("GameSettings_Main");
@@ -42,13 +44,14 @@ public class ScriptableSettingsWindow : EditorWindow
          _toolbarSearchField.AddToClassList("ListSearchField");
          rootVisualElement.Q<VisualElement>("LeftPanel").style.maxWidth = leftPanelMaxWidth;
                  
-         Button refreshButton = rootVisualElement.Q<Button>("Update");
+        /*Button refreshButton = rootVisualElement.Q<Button>("Update");
         refreshButton.clicked += () =>
         {
-            ScriptableSettingsManager.Update();
-            Close();
-            ShowExample();
+             ScriptableSettingsManager.Update();
+             PopulateTags(false);
+             PopulatePresetList();
         };
+        */
         
          PopulateTags(false);
          PopulatePresetList();

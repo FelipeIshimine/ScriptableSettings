@@ -69,9 +69,7 @@ public abstract class ScriptableSingleton<T> : BaseScriptableSingleton where T :
             scriptableSingletons.Add(this);
         }
         else if (instance != this)
-        {
                 Debug.LogError("<Color=red> " + this + "  SCRIPTABLE_SINGLETON ALREADY EXIST CONFLICT </color>");
-        }
     }
    
 }

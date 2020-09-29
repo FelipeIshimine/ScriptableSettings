@@ -72,7 +72,7 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
         tags = new List<ScriptableSettingsTag>(Resources.LoadAll<ScriptableSettingsTag>(FilePath));
     }
 
-    private static string GetKey(Type type) => type.FullName;
+    public static string GetKey(Type type) => type.FullName;
     public const string AssetsPath = "Assets/ScriptableSettings/Resources";
     public static T Get<T>() where T : ScriptableSettings
     {
