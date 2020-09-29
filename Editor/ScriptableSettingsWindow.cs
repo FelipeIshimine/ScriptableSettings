@@ -16,7 +16,7 @@ public class ScriptableSettingsWindow : EditorWindow
     private const int leftPanelMaxWidth = 170;
     private bool _isTagFoldoutOpen;
 
-    [MenuItem("Window/Ishimine/ScriptableSettings %&i", priority = 1)]
+    [MenuItem("Window/Ishimine/ScriptableSettings %#i", priority = 1)]
     public static void ShowExample()
     {
         ScriptableSettingsWindow wnd = GetWindow<ScriptableSettingsWindow>();
