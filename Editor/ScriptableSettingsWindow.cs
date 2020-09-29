@@ -98,6 +98,7 @@ public class ScriptableSettingsWindow : EditorWindow
 
         List<ScriptableSettings> settings = GetFilteredTags();
 
+        settings.Sort(SettinsSorter);
         for (int i = 0; i < settings.Count; i++)
         {
             string fieldName = settings[i].TabName.ToLowerInvariant();
@@ -132,7 +133,7 @@ public class ScriptableSettingsWindow : EditorWindow
         }
     }
 
-
+    private static int SettinsSorter(ScriptableSettings x, ScriptableSettings y)=> string.Compare(x.TabName, y.TabName, StringComparison.Ordinal);
 
     private Foldout CreateSettingTagsFoldout(ref Foldout tagsFoldout, ScriptableSettings value,bool isOpen)
     {
