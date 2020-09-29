@@ -98,4 +98,5 @@ Button:hover {
 #LeftPanel Label {
     min-width: 50px;
     font-size: 12px;
+    width: auto;
 }

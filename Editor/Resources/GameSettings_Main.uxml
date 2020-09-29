@@ -1,15 +1,17 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:Scroller high-value="100" direction="Horizontal" value="42">
+        <Style src="GameSettings_Style.uss" />
+    </ui:Scroller>
     <ui:VisualElement name="Body">
         <Style src="GameSettings_Style.uss" />
         <ui:VisualElement name="Container">
             <ui:VisualElement name="LeftPanel">
                 <uie:ToolbarSearchField name="SearchField" class="GameSettings_Style" style="width: auto;" />
-                <ui:Button name="Update" text="Update" />
-                <ui:ListView name="ListView" />
-                <ui:VisualElement style="margin-right: 4px; margin-left: 4px; flex-direction: row; border-bottom-width: 2px; border-bottom-color: rgba(53, 53, 53, 255); border-top-width: 2px; border-top-color: rgba(53, 53, 53, 255);">
-                    <ui:Label text="Tags" style="align-items: flex-start; top: 0; height: 20px;" />
-                    <ui:Foldout name="TagsFoldout" text="&#10;" value="false" class="TagsFoldout" style="flex-grow: 1; align-items: flex-start; font-size: 0; color: rgba(31, 31, 31, 255); flex-wrap: nowrap;" />
+                <ui:ListView name="ListView" style="flex-grow: 1;" />
+                <ui:VisualElement style="margin-right: 4px; margin-left: 4px; flex-direction: row; border-bottom-width: 2px; border-bottom-color: rgb(53, 53, 53); border-top-width: 2px; border-top-color: rgb(53, 53, 53);">
                     <ui:Button text="+" name="TagsAdd" style="-unity-font-style: bold; height: 20px; width: 20px; margin-right: 0; margin-bottom: 0; margin-top: 0; border-right-width: 1px; margin-left: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+                    <ui:Label text="Tags" style="align-items: flex-start; top: 0; height: 21px; flex-shrink: 1; width: 32px; min-width: auto;" />
+                    <ui:Foldout name="TagsFoldout" text="&#10;" value="false" class="TagsFoldout" style="flex-grow: 1; align-items: stretch; font-size: 0; color: rgb(31, 31, 31); flex-wrap: nowrap; flex-shrink: 0;" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="RightPanel" style="justify-content: space-between;">

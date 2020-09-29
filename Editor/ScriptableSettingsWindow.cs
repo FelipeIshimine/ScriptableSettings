@@ -26,24 +26,24 @@ public class ScriptableSettingsWindow : EditorWindow
     public void OnEnable()
     {
         ScriptableSettingsManager.Update();
-        
+
         VisualElement root = rootVisualElement;
 
         var visualTree = Resources.Load<VisualTreeAsset>("GameSettings_Main");
 
         visualTree.CloneTree(root);
-    
+
         var styleSheet = Resources.Load<StyleSheet>("GameSettings_Style");
 
         root.styleSheets.Add(styleSheet);
-        
-        ToolbarSearchField  _toolbarSearchField = rootVisualElement.Q<ToolbarSearchField>("SearchField");
-         _toolbarSearchField.RegisterValueChangedCallback(OnSearchFieldChange);
-         _toolbarSearchField.name = "SearchField";
-                       
-         _toolbarSearchField.AddToClassList("ListSearchField");
-         rootVisualElement.Q<VisualElement>("LeftPanel").style.maxWidth = leftPanelMaxWidth;
-                 
+
+        ToolbarSearchField _toolbarSearchField = rootVisualElement.Q<ToolbarSearchField>("SearchField");
+        _toolbarSearchField.RegisterValueChangedCallback(OnSearchFieldChange);
+        _toolbarSearchField.name = "SearchField";
+
+        _toolbarSearchField.AddToClassList("ListSearchField");
+        rootVisualElement.Q<VisualElement>("LeftPanel").style.maxWidth = leftPanelMaxWidth;
+
         /*Button refreshButton = rootVisualElement.Q<Button>("Update");
         refreshButton.clicked += () =>
         {
@@ -52,9 +52,9 @@ public class ScriptableSettingsWindow : EditorWindow
              PopulatePresetList();
         };
         */
-        
-         PopulateTags(false);
-         PopulatePresetList();
+
+        PopulateTags(false);
+        PopulatePresetList();
     }
 
     private void PopulateTags(bool isOpen)
@@ -62,6 +62,9 @@ public class ScriptableSettingsWindow : EditorWindow
         Foldout tagsFoldout = rootVisualElement.Q<Foldout>("TagsFoldout");
         tagsFoldout.SetValueWithoutNotify(isOpen);
         tagsFoldout.Clear();
+        ListView listView = CreateListViewForTags();
+        tagsFoldout.Add(listView);
+
         List<ScriptableSettingsTag> tags = ScriptableSettingsManager.Instance.Tags;
         for (int i = 0; i < tags.Count; i++)
         {
@@ -69,20 +72,27 @@ public class ScriptableSettingsWindow : EditorWindow
             toggle.text = " " + tags[i].name;
             int index = i;
             toggle.RegisterValueChangedCallback(x => OnToggleTag(tags[index], x));
-            tagsFoldout.Add(toggle);
-            
-            
             ContextualMenuManipulator manipulator = new ContextualMenuManipulator(x =>
                 {
                    x.menu.AppendAction("Delete",y => DeleteTag(tags[index])); 
                 }){target = toggle};
-            tagsFoldout.Add(toggle);
-            
+            listView.Add(toggle);
         }
 
+        listView.style.height = Mathf.Min(tags.Count * 20, 100);
         Button tagsAdd = rootVisualElement.Q<Button>("TagsAdd");
         tagsAdd.clicked -= GoToCreateNewTag;
         tagsAdd.clicked += GoToCreateNewTag;
+    }
+
+    private static ListView CreateListViewForTags()
+    {
+        ListView listView = new ListView();
+        listView.style.width = StyleKeyword.Auto;
+        listView.style.height = 110;
+        listView.style.flexShrink = 1;
+        listView.style.flexGrow = 1;
+        return listView;
     }
 
     private void OnToggleTag(ScriptableSettingsTag scriptableSettingsTag, ChangeEvent<bool> evt)
@@ -142,9 +152,12 @@ public class ScriptableSettingsWindow : EditorWindow
     {
         if(tagsFoldout== null)
             tagsFoldout= new Foldout();
-        
         tagsFoldout.SetValueWithoutNotify(isOpen);
         tagsFoldout.Clear();
+
+        ListView listView = CreateListViewForTags();
+        tagsFoldout.Add(listView);
+        
         List<ScriptableSettingsTag> tags = ScriptableSettingsManager.Instance.Tags;
         for (int j = 0; j < tags.Count; j++)
         {
@@ -152,8 +165,9 @@ public class ScriptableSettingsWindow : EditorWindow
             int index = j;
             toggle.SetValueWithoutNotify(tags[index].Elements.Contains(value));
             toggle.RegisterValueChangedCallback(x => OnSettingsTagToggle(value, tags[index], x));
-            tagsFoldout.Add(toggle);
+            listView.Add(toggle);
         }
+        listView.style.height = Mathf.Min(tags.Count * 20, 100);
         return tagsFoldout;
     }
 
