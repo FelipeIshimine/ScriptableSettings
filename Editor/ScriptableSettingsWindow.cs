@@ -17,15 +17,15 @@ public class ScriptableSettingsWindow : EditorWindow
     private bool _isTagFoldoutOpen;
 
     [MenuItem("Window/Ishimine/ScriptableSettings %#i", priority = 1)]
-    public static void ShowExample()
+    public static void ShowWindow()
     {
+        ScriptableSettingsManager.Update();
         ScriptableSettingsWindow wnd = GetWindow<ScriptableSettingsWindow>();
         wnd.titleContent = new GUIContent("ScriptableSettings");
     }
 
     public void OnEnable()
     {
-        ScriptableSettingsManager.Update();
 
         VisualElement root = rootVisualElement;
 
