@@ -1,8 +1,7 @@
 {
     "name": "com.Ishimine.ScriptableSettingsEditor",
     "references": [
-        "com.Ishimine.ScriptableSettingsCore",
-        "com.ishimine.RunetimeScriptableSingleton"
+        "com.Ishimine.ScriptableSettingsCore"
     ],
     "includePlatforms": [
         "Editor"
