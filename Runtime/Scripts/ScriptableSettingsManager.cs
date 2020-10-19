@@ -6,12 +6,11 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.PackageManager;
-using UnityEditor.PackageManager.Requests;
+using UnityEditor.PackageManager.Requests;  
 #endif
 
-
 [CreateAssetMenu(menuName = "GameSettings/Manager", fileName = "GameSettingsManager")]
-public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsManager>
+public class ScriptableSettingsManager : RuntimeScriptableSingleton<ScriptableSettingsManager>
 {
 #if UNITY_EDITOR
     public static class UpdateGit
@@ -24,8 +23,6 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
     }
 #endif
 
-    public override ScriptableSettingsManager Myself => this;
-
     [SerializeField] private  List<ScriptableSettingsTag> tags = new List<ScriptableSettingsTag>();
     public List<ScriptableSettingsTag> Tags
     {
@@ -36,7 +33,6 @@ public class ScriptableSettingsManager : ScriptableSingleton<ScriptableSettingsM
             return tags;
         }
     }
-
 
     [SerializeField] private  List<ScriptableSettings> scriptableSettings;
     public List<ScriptableSettings> ScriptableSettings

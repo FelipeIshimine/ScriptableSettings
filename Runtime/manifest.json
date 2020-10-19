@@ -5,8 +5,20 @@
 	"Unity": "2019.1",
 	"author": "Felipe Ishimine",
 	"description": "Core package for creating a Settings Management System based on the Flyweight Pattern with ScriptableObjects and a centralized editor window",
-	"dependencies":{  		 
+	
+	
+	"dependencies":{  		
+		"com.ishimine.runetimescriptablesingleton": "https://github.com/FelipeIshimine/RuntimeScriptableSingleton.git"
 	},
+   "scopedRegistries": [
+    {
+      "name": "RuntimeScriptableSingleton",
+      "url": "https://github.com/FelipeIshimine/RuntimeScriptableSingleton.git",
+      "scopes": [
+        "com.ishimine.runtimescriptablesingleton", "com.ishimine.runtimescriptablesingleton"
+      ]
+    }
+  	],
 	"keywords":
 	["same","state", "machine","Ishimine"],
 	"repository":
