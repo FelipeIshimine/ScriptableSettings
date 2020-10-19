@@ -1,7 +1,7 @@
 {
     "name": "com.Ishimine.ScriptableSettingsCore",
     "references": [
-        "com.ishimine.RunetimeScriptableSingleton"
+        "com.ishimine.RuntimeScriptableSingleton"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
