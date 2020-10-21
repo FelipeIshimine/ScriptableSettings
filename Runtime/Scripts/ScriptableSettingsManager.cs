@@ -22,8 +22,8 @@ public class ScriptableSettingsManager : RuntimeScriptableSingleton<ScriptableSe
     }
 #endif
 
-    [SerializeField] private  List<ScriptableSettingsTag> tags = new List<ScriptableSettingsTag>();
-    public List<ScriptableSettingsTag> Tags
+    [SerializeField] private  List<ScriptableTag> tags = new List<ScriptableTag>();
+    public List<ScriptableTag> Tags
     {
         get
         {
@@ -64,7 +64,7 @@ public class ScriptableSettingsManager : RuntimeScriptableSingleton<ScriptableSe
     
     private void InitializeTags()
     {
-        tags = new List<ScriptableSettingsTag>(Resources.LoadAll<ScriptableSettingsTag>(FilePath));
+        tags = new List<ScriptableTag>(Resources.LoadAll<ScriptableTag>(FilePath));
     }
 
     public static string GetKey(Type type) => type.FullName;
@@ -81,20 +81,20 @@ public class ScriptableSettingsManager : RuntimeScriptableSingleton<ScriptableSe
     }
 
 #if UNITY_EDITOR
-    public static ScriptableSettingsTag CreateNewTag(string nTagName)
+    public static ScriptableTag CreateNewTag(string nTagName)
     {
         return Instance.FindOrCreateTag(nTagName);
     }
 
-    public ScriptableSettingsTag FindOrCreateTag(string tagName)
+    public ScriptableTag FindOrCreateTag(string tagName)
     {
-        ScriptableSettingsTag tag = tags.Find(x => x.name == tagName);
+        ScriptableTag tag = tags.Find(x => x.name == tagName);
         return (tag == null)?CreateTag(tagName): tag;
     }
 
-    private ScriptableSettingsTag CreateTag(string tagName)
+    private ScriptableTag CreateTag(string tagName)
     {
-        ScriptableSettingsTag nTag = CreateInstance<ScriptableSettingsTag>();
+        ScriptableTag nTag = CreateInstance<ScriptableTag>();
         nTag.name = tagName;
         AssetDatabase.AddObjectToAsset(nTag, this);
         tags.Add(nTag);
@@ -149,7 +149,7 @@ public class ScriptableSettingsManager : RuntimeScriptableSingleton<ScriptableSe
             select type;
     }
     
-    public static void DeleteTag(ScriptableSettingsTag tag)
+    public static void DeleteTag(ScriptableTag tag)
     {
         Instance.tags.Remove(tag);
         DestroyImmediate(tag,true);

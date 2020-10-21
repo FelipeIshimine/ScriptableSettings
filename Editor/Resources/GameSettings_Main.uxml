@@ -7,6 +7,7 @@
         <ui:VisualElement name="Container">
             <ui:VisualElement name="LeftPanel">
                 <uie:ToolbarSearchField name="SearchField" class="GameSettings_Style" style="width: auto;" />
+                <ui:Toggle label="ScriptableSingletons" name="IncludeSSToggle" style="flex-shrink: 1;" />
                 <ui:ListView name="ListView" style="flex-grow: 1;" />
                 <ui:VisualElement style="margin-right: 4px; margin-left: 4px; flex-direction: row; border-bottom-width: 2px; border-bottom-color: rgb(53, 53, 53); border-top-width: 2px; border-top-color: rgb(53, 53, 53);">
                     <ui:Button text="+" name="TagsAdd" style="-unity-font-style: bold; height: 20px; width: 20px; margin-right: 0; margin-bottom: 0; margin-top: 0; border-right-width: 1px; margin-left: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />

@@ -10,12 +10,12 @@ using Object = UnityEngine.Object;
 public class ScriptableSettingsWindow : EditorWindow    
 {
     private Object _selection;
-    private List<ScriptableSettingsTag> _activeTags = new List<ScriptableSettingsTag>();
+    private List<ScriptableTag> _activeTags = new List<ScriptableTag>();
     private string _filterValue = string.Empty;
 
     private const int leftPanelMaxWidth = 170;
     private bool _isTagFoldoutOpen;
-
+    Toggle includeSS;
     [MenuItem("Window/Ishimine/ScriptableSettings %#i", priority = 1)]
     public static void ShowWindow()
     {
@@ -26,10 +26,9 @@ public class ScriptableSettingsWindow : EditorWindow
 
     public void OnEnable()
     {
-
         VisualElement root = rootVisualElement;
 
-        var visualTree = Resources.Load<VisualTreeAsset>("GameSettings_Main");
+        var visualTree = Resources.Load<VisualTreeAsset>("GameSettings_Main");  
 
         visualTree.CloneTree(root);
 
@@ -44,16 +43,15 @@ public class ScriptableSettingsWindow : EditorWindow
         _toolbarSearchField.AddToClassList("ListSearchField");
         rootVisualElement.Q<VisualElement>("LeftPanel").style.maxWidth = leftPanelMaxWidth;
 
-        /*Button refreshButton = rootVisualElement.Q<Button>("Update");
-        refreshButton.clicked += () =>
-        {
-             ScriptableSettingsManager.Update();
-             PopulateTags(false);
-             PopulatePresetList();
-        };
-        */
+        includeSS = root.Q<Toggle>("IncludeSSToggle");
+        includeSS.RegisterValueChangedCallback(OnIncludeSSToggle);
 
         PopulateTags(false);
+        PopulatePresetList();
+    }
+
+    private void OnIncludeSSToggle(ChangeEvent<bool> evt)
+    {
         PopulatePresetList();
     }
 
@@ -65,7 +63,7 @@ public class ScriptableSettingsWindow : EditorWindow
         ListView listView = CreateListViewForTags();
         tagsFoldout.Add(listView);
 
-        List<ScriptableSettingsTag> tags = ScriptableSettingsManager.Instance.Tags;
+        List<ScriptableTag> tags = ScriptableSettingsManager.Instance.Tags;
         for (int i = 0; i < tags.Count; i++)
         {
             Toggle toggle = new Toggle();
@@ -95,7 +93,7 @@ public class ScriptableSettingsWindow : EditorWindow
         return listView;
     }
 
-    private void OnToggleTag(ScriptableSettingsTag scriptableSettingsTag, ChangeEvent<bool> evt)
+    private void OnToggleTag(ScriptableTag scriptableSettingsTag, ChangeEvent<bool> evt)
     {
         if (_activeTags.Contains(scriptableSettingsTag)) _activeTags.Remove(scriptableSettingsTag);
         else _activeTags.Add(scriptableSettingsTag);
@@ -109,17 +107,28 @@ public class ScriptableSettingsWindow : EditorWindow
         
         string lowerFilterValue = this._filterValue.ToLowerInvariant();
 
-        List<ScriptableSettings> settings = GetFilteredTags();
+        List<ScriptableSettings> settings = GetScriptableSettingFilteredByTags();
 
-        settings.Sort(SettinsSorter);
-        for (int i = 0; i < settings.Count; i++)
+        List<BaseRuntimeScriptableSingleton> baseScriptableSingletons = (includeSS.value)? GetScriptableObjectsFilteredByTags(): new List<BaseRuntimeScriptableSingleton>();
+
+        List<ScriptableObject> scriptableObjects = new List<ScriptableObject>(settings);
+        scriptableObjects.AddRange(baseScriptableSingletons);        
+        scriptableObjects.Sort(SettinsSorter);
+        for (int i = 0; i < scriptableObjects.Count; i++)
         {
-            string fieldName = settings[i].TabName.ToLowerInvariant();
-            
-            if (!fieldName.Contains(lowerFilterValue)) continue;
+            if (scriptableObjects[i] is ScriptableSettings scriptableSettingsA)
+            {
+                string fieldName = scriptableSettingsA.TabName.ToLowerInvariant();
+                if (!fieldName.Contains(lowerFilterValue)) continue;
+            }
 
             VisualElement listContainer = new VisualElement {name = "ListContainer"};
-            Button button = new Button {text = settings[i].TabName};
+            Button button = new Button
+            {
+                text = scriptableObjects[i] is ScriptableSettings scriptableSettingsB
+                    ? scriptableSettingsB.TabName           //Es un Settings
+                    : scriptableObjects[i].name             //Es un RuntimeSingleton
+            };
 
             //Applying a CSS class to an element
             button.AddToClassList("ListLabel");
@@ -127,7 +136,7 @@ public class ScriptableSettingsWindow : EditorWindow
 
             //Inserting element into list
             list.Insert(list.childCount, listContainer);
-            ScriptableSettings value = settings[i];
+            ScriptableObject value = scriptableObjects[i];
 
             if (_selection == value)
             {
@@ -135,20 +144,28 @@ public class ScriptableSettingsWindow : EditorWindow
                 UnityEditor.Editor editor = UnityEditor.Editor.CreateEditor(value);
                 rootVisualElement.Q<IMGUIContainer>("Target").onGUIHandler = () => editor.OnInspectorGUI();
                 Foldout tagFoldout = rootVisualElement.Q<Foldout>("SettingTagsSelection");
+                
                 CreateSettingTagsFoldout(ref tagFoldout, value, _isTagFoldoutOpen);
+                
                 tagFoldout.name = "SettingTagsSelection";
                 tagFoldout.RegisterValueChangedCallback(x => _isTagFoldoutOpen = x.newValue);
                 rootVisualElement.Q<VisualElement>("RightPanel").Add(tagFoldout);
             }
 
             button.clicked += () => UpdateSelection(value);
-            SetContextMenuManipulator(button, value);
+            if(value is ScriptableSettings scriptableSettings)
+                SetContextMenuManipulator(button, scriptableSettings);
         }
     }
 
-    private static int SettinsSorter(ScriptableSettings x, ScriptableSettings y)=> string.Compare(x.TabName, y.TabName, StringComparison.Ordinal);
+    private static int SettinsSorter(ScriptableObject x, ScriptableObject y)
+    {
+        string sA = x is ScriptableSettings sX ? sX.TabName : x.name;
+        string sB = x is ScriptableSettings sY ? sY.TabName : y.name;
+        return string.Compare(sA, sB, StringComparison.Ordinal);
+    }
 
-    private Foldout CreateSettingTagsFoldout(ref Foldout tagsFoldout, ScriptableSettings value,bool isOpen)
+    private Foldout CreateSettingTagsFoldout(ref Foldout tagsFoldout, ScriptableObject value,bool isOpen)
     {
         if(tagsFoldout== null)
             tagsFoldout= new Foldout();
@@ -158,7 +175,7 @@ public class ScriptableSettingsWindow : EditorWindow
         ListView listView = CreateListViewForTags();
         tagsFoldout.Add(listView);
         
-        List<ScriptableSettingsTag> tags = ScriptableSettingsManager.Instance.Tags;
+        List<ScriptableTag> tags = ScriptableSettingsManager.Instance.Tags;
         for (int j = 0; j < tags.Count; j++)
         {
             Toggle toggle = new Toggle {text = tags[j].name};
@@ -171,7 +188,7 @@ public class ScriptableSettingsWindow : EditorWindow
         return tagsFoldout;
     }
 
-    private void DeleteTag(ScriptableSettingsTag tag)
+    private void DeleteTag(ScriptableTag tag)
     {
         if (EditorUtility.DisplayDialog($"Delete tag {tag.name}",
             $"Are you sure you want to delete the tag {tag.name}?", "Yes", "Cancel"))
@@ -182,7 +199,7 @@ public class ScriptableSettingsWindow : EditorWindow
         }
     }
 
-    private void OnSettingsTagToggle(ScriptableSettings scriptableSettings, ScriptableSettingsTag tag,
+    private void OnSettingsTagToggle(ScriptableObject scriptableSettings, ScriptableTag tag,
         ChangeEvent<bool> evt)
     {
         if (evt.newValue)
@@ -193,7 +210,7 @@ public class ScriptableSettingsWindow : EditorWindow
         PopulatePresetList();
     }
 
-    private List<ScriptableSettings> GetFilteredTags()
+    private List<ScriptableSettings> GetScriptableSettingFilteredByTags()
     {
         if(_activeTags == null || _activeTags.Count == 0) return ScriptableSettingsManager.Instance.ScriptableSettings;
 
@@ -202,7 +219,7 @@ public class ScriptableSettingsWindow : EditorWindow
         for (int index = settings.Count - 1; index >= 0; index--)
         {
             ScriptableSettings item = settings[index];
-            foreach (ScriptableSettingsTag tag in _activeTags)
+            foreach (ScriptableTag tag in _activeTags)
             {
                 if (tag.Elements.Contains(item)) continue;
                 settings.RemoveAt(index);
@@ -211,6 +228,40 @@ public class ScriptableSettingsWindow : EditorWindow
         }
         return new List<ScriptableSettings>(settings);
     }
+    
+    private List<BaseRuntimeScriptableSingleton> GetScriptableObjectsFilteredByTags()
+    {
+        List<BaseRuntimeScriptableSingleton> baseRuntimeScriptableSingletons = FindAssetsByType<BaseRuntimeScriptableSingleton>();
+        if(_activeTags == null || _activeTags.Count == 0) return baseRuntimeScriptableSingletons;
+
+        for (int index = baseRuntimeScriptableSingletons.Count - 1; index >= 0; index--)
+        {
+            BaseRuntimeScriptableSingleton item = baseRuntimeScriptableSingletons[index];
+            foreach (ScriptableTag tag in _activeTags)
+            {
+                if (tag.Elements.Contains(item)) continue;
+                baseRuntimeScriptableSingletons.RemoveAt(index);
+                break;
+            }
+        }
+        return baseRuntimeScriptableSingletons;
+    }
+    
+    public static List<T> FindAssetsByType<T>() where T : UnityEngine.Object
+ {
+     List<T> assets = new List<T>();
+     string[] guids = AssetDatabase.FindAssets(string.Format("t:{0}", typeof(T)));
+     for( int i = 0; i < guids.Length; i++ )
+     {
+         string assetPath = AssetDatabase.GUIDToAssetPath( guids[i] );
+         T asset = AssetDatabase.LoadAssetAtPath<T>( assetPath );
+         if( asset != null )
+         {
+             assets.Add(asset);
+         }
+     }
+     return assets;
+ }
 
     private void OnSearchFieldChange(ChangeEvent<string> evt)
     {
@@ -247,7 +298,7 @@ public class ScriptableSettingsWindow : EditorWindow
         return true;
     }    
 
-    private void UpdateSelection(ScriptableSettings target)
+    private void UpdateSelection(Object target)
     {
         _selection = target;
         PopulatePresetList();
@@ -267,7 +318,7 @@ public class ScriptableSettingsWindow : EditorWindow
 
     public bool IsValidTagName(string arg)
     {
-        foreach (ScriptableSettingsTag tag in ScriptableSettingsManager.Instance.Tags)
+        foreach (ScriptableTag tag in ScriptableSettingsManager.Instance.Tags)
             if (tag.name == arg)
                 return false;
         return true;
