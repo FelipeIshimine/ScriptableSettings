@@ -12,7 +12,7 @@ using UnityEditor.PackageManager.Requests;
 public class ScriptableSettingsManager : RuntimeScriptableSingleton<ScriptableSettingsManager>
 {
 #if UNITY_EDITOR
-    public static class UpdateGit
+    public static class UpdateScriptableSettingsPackage
     {
         [MenuItem("Window/Ishimine/Update/ScriptableSettings")]
         public static void SelectMe() => Client.Add("https://github.com/FelipeIshimine/ScriptableSettings.git");
