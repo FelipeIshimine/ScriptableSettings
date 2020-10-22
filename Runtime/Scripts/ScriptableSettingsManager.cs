@@ -52,6 +52,13 @@ public class ScriptableSettingsManager : RuntimeScriptableSingleton<ScriptableSe
         }    
     }
 
+    public static bool ShowRuntimeScriptableSingleton
+    {
+        get => Instance.showRuntimeScriptableSingleton;
+        set => Instance.showRuntimeScriptableSingleton = value;
+    }
+    [SerializeField] private bool showRuntimeScriptableSingleton = true;
+
     private void InitializeAllSettings()
     {
         _allSettings = new Dictionary<string, ScriptableSettings>();

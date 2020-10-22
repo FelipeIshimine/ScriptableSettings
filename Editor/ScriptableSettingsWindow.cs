@@ -44,6 +44,7 @@ public class ScriptableSettingsWindow : EditorWindow
         rootVisualElement.Q<VisualElement>("LeftPanel").style.maxWidth = leftPanelMaxWidth;
 
         includeSS = root.Q<Toggle>("IncludeSSToggle");
+        includeSS.SetValueWithoutNotify(ScriptableSettingsManager.ShowRuntimeScriptableSingleton);
         includeSS.RegisterValueChangedCallback(OnIncludeSSToggle);
 
         PopulateTags(false);
@@ -52,6 +53,7 @@ public class ScriptableSettingsWindow : EditorWindow
 
     private void OnIncludeSSToggle(ChangeEvent<bool> evt)
     {
+        ScriptableSettingsManager.ShowRuntimeScriptableSingleton = evt.newValue;
         PopulatePresetList();
     }
 
