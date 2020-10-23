@@ -119,9 +119,10 @@ public class ScriptableSettingsWindow : EditorWindow
         for (int i = 0; i < scriptableObjects.Count; i++)
         {
             if (scriptableObjects[i] is ScriptableSettings scriptableSettingsA)
+            {
                 if (!scriptableSettingsA.TabName.ToLowerInvariant().Contains(lowerFilterValue)) continue;
-            else
-                if (!scriptableObjects[i].name.ToLowerInvariant().Contains(lowerFilterValue)) continue;
+            }
+            else if (!scriptableObjects[i].name.ToLowerInvariant().Contains(lowerFilterValue)) continue;
 
             VisualElement listContainer = new VisualElement {name = "ListContainer"};
             Button button = new Button
